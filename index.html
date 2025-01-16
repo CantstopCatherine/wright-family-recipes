@@ -42,7 +42,13 @@
             <label id="label1" for="clue1">Clue 1:</label>
             <input type="text" id="clue1">
             <button onclick="checkAnswer('clue1', 'label1', 0)">Check</button>
-            <div class="clue-description">This is a description for Clue 1</div>
+            <div class="clue-description">
+              Your team is battered and weary, desperately in need of your help. You close your eyes and feel the power surging within you. 
+              Slowly, you begin to levitate and draw the energy from the very air around you.  A shimmering purple orb forms above your head. 
+              Your loyal companion, Jeff, stands by your side, his healing magic enveloping you in a warm, revitalizing glow. With a deep breath, 
+              you gather your strength and launch your ultimate attack, shouting:
+              "_ _ _ _ &nbsp;&nbsp;&nbsp; _ _ _ _ _ _ _"
+            </div>
         </div>
         <div class="clue">
             <label id="label2" for="clue2">Clue 2:</label>
@@ -100,26 +106,40 @@
         </div>
     </div>
 
-    <div id="equation" class="equation">c1c2 + c3c4 x c5c6 - c7c8 x c9 + c10</div>
+    <div id="equation" class="equation"></div>
 
     <script>
-        var correctAnswers = [9, 9, 2, 4, 2, 9, 8, 3, 2, 1];
+        var equation = ['_', '_', '_', '_', '_', '_', '_', '_', '_', '_'];
+        
+        var equationAnswers = [9, 9, 2, 4, 2, 9, 8, 3, 2, 1];
 
+        var correctAnswers = ['fear magneto', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz'];
+
+        function updateEquationDiv() {
+            var equationElement = document.getElementById('equation');
+
+            var equationString = equation[0] + " " + equation[1] + " + " + equation[2] + " " + equation[3] + " x " +
+                                equation[4] + " " + equation[5] + " - " + equation[6] + " " + equation[7] + " x " +
+                                equation[8] + " + " + equation[9];
+            equationElement.textContent = equationString;
+        }
+        
+        updateEquationDiv();
+        
         function checkAnswer(clueId, labelId, clueIndex) {
             var input = document.getElementById(clueId).value;
-            if (input === 'xyz') {
+            if (input.toLowerCase() === correctAnswers[clueIndex]) {
+                document.getElementById(labelId).classList.remove('incorrect');
                 document.getElementById(labelId).classList.add('completed');
-                updateEquation(clueIndex, correctAnswers[clueIndex]);
+                updateEquation(clueIndex);
             } else {
                 document.getElementById(labelId).classList.add('incorrect');
             }
         }
 
-        function updateEquation(index, value) {
-            var equation = document.getElementById('equation').textContent;
-            var placeholder = 'c' + (index + 1);
-            equation = equation.replace(placeholder, value);
-            document.getElementById('equation').textContent = equation;
+        function updateEquation(index) {
+            equation[index] = equationAnswers[index]
+            updateEquationDiv();
         }
     </script>
 </body>
