@@ -1,9 +1,126 @@
-<!doctype html>
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-  </head>
-  <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 30th Birthday Peter!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .clue {
+            margin: 10px 0;
+        }
+        .clue input {
+            margin-right: 10px;
+        }
+        .completed {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .equation {
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+        .clue-description { 
+            margin-top: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Happy 30th Birthday Peter!</h1>
+    <p>Welcome to your birthday scavenger hunt! Solve each clue below and enter the correct code to reveal a surprise message.</p>
+
+    <div class="clues">
+        <div class="clue">
+            <label id="label1" for="clue1">Clue 1:</label>
+            <input type="text" id="clue1">
+            <button onclick="checkAnswer('clue1', 'label1', 0)">Check</button>
+            <div class="clue-description">This is a description for Clue 1</div>
+        </div>
+        <div class="clue">
+            <label id="label2" for="clue2">Clue 2:</label>
+            <input type="text" id="clue2">
+            <button onclick="checkAnswer('clue2', 'label2', 1)">Check</button>
+            <div class="clue-description">This is a description for Clue 2</div>
+        </div>
+        <div class="clue">
+            <label id="label3" for="clue3">Clue 3:</label>
+            <input type="text" id="clue3">
+            <button onclick="checkAnswer('clue3', 'label3', 2)">Check</button>
+            <div class="clue-description">This is a description for Clue 3</div>
+        </div>
+        <div class="clue">
+            <label id="label4" for="clue4">Clue 4:</label>
+            <input type="text" id="clue4">
+            <button onclick="checkAnswer('clue4', 'label4', 3)">Check</button>
+            <div class="clue-description">This is a description for Clue 4</div>
+        </div>
+        <div class="clue">
+            <label id="label5" for="clue5">Clue 5:</label>
+            <input type="text" id="clue5">
+            <button onclick="checkAnswer('clue5', 'label5', 4)">Check</button>
+            <div class="clue-description">This is a description for Clue 5</div>
+        </div>
+        <div class="clue">
+            <label id="label6" for="clue6">Clue 6:</label>
+            <input type="text" id="clue6">
+            <button onclick="checkAnswer('clue6', 'label6', 5)">Check</button>
+            <div class="clue-description">This is a description for Clue 6</div>
+        </div>
+        <div class="clue">
+            <label id="label7" for="clue7">Clue 7:</label>
+            <input type="text" id="clue7">
+            <button onclick="checkAnswer('clue7', 'label7', 6)">Check</button>
+            <div class="clue-description">This is a description for Clue 7</div>
+        </div>
+        <div class="clue">
+            <label id="label8" for="clue8">Clue 8:</label>
+            <input type="text" id="clue8">
+            <button onclick="checkAnswer('clue8', 'label8', 7)">Check</button>
+            <div class="clue-description">This is a description for Clue 8</div>
+        </div>
+        <div class="clue">
+            <label id="label9" for="clue9">Clue 9:</label>
+            <input type="text" id="clue9">
+            <button onclick="checkAnswer('clue9', 'label9', 8)">Check</button>
+            <div class="clue-description">This is a description for Clue 9</div>
+        </div>
+        <div class="clue">
+            <label id="label10" for="clue10">Clue 10:</label>
+            <input type="text" id="clue10">
+            <button onclick="checkAnswer('clue10', 'label10', 9)">Check</button>
+            <div class="clue-description">This is a description for Clue 10</div>
+        </div>
+    </div>
+
+    <div id="equation" class="equation">c1c2 + c3c4 x c5c6 - c7c8 x c9 + c10</div>
+
+    <script>
+        var correctAnswers = [9, 9, 2, 4, 2, 9, 8, 3, 2, 1];
+
+        function checkAnswer(clueId, labelId, clueIndex) {
+            var input = document.getElementById(clueId).value;
+            if (input === 'xyz') {
+                document.getElementById(labelId).classList.add('completed');
+                updateEquation(clueIndex, correctAnswers[clueIndex]);
+            } else {
+                document.getElementById(labelId).classList.add('incorrect');
+            }
+        }
+
+        function updateEquation(index, value) {
+            var equation = document.getElementById('equation').textContent;
+            var placeholder = 'c' + (index + 1);
+            equation = equation.replace(placeholder, value);
+            document.getElementById('equation').textContent = equation;
+        }
+    </script>
+</body>
 </html>
