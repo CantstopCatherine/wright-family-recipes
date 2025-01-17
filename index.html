@@ -35,7 +35,10 @@
 </head>
 <body>
     <h1>Happy 30th Birthday Peter!</h1>
-    <p>Welcome to your birthday scavenger hunt! Solve each clue below and enter the correct code to reveal a surprise message.</p>
+    <p>
+      Congratulations on making it to 30! Now that you're more of an adult, you have to work for your presents.
+      Correctly enter the answers for each clue below to reveal the equation.  Solve the equation for the combination.  Good Luck!
+    </p>
 
     <div class="clues">
         <div class="clue">
@@ -43,66 +46,91 @@
             <input type="text" id="clue1">
             <button onclick="checkAnswer('clue1', 'label1', 0)">Check</button>
             <div class="clue-description">
-              Your team is battered and weary, desperately in need of your help. You close your eyes and feel the power surging within you. 
-              Slowly, you begin to levitate and draw the energy from the very air around you.  A shimmering purple orb forms above your head. 
-              Your loyal companion, Jeff, stands by your side, his healing magic enveloping you in a warm, revitalizing glow. With a deep breath, 
-              you gather your strength and launch your ultimate attack, shouting:
-              "_ _ _ _ &nbsp;&nbsp;&nbsp; _ _ _ _ _ _ _"
+              Your team needs your help.  Slowly, you begin to levitate and draw the energy from the air around you.  A shimmering purple orb forms above your head. 
+              Your loyal companion, Jeff, stands by your side, dutifully healing you. With a deep breath, you gather your strength and launch your ultimate attack, shouting:<br>
+              _ _ _ _ &nbsp;&nbsp;&nbsp; _ _ _ _ _ _ _
             </div>
         </div>
         <div class="clue">
             <label id="label2" for="clue2">Clue 2:</label>
             <input type="text" id="clue2">
             <button onclick="checkAnswer('clue2', 'label2', 1)">Check</button>
-            <div class="clue-description">This is a description for Clue 2</div>
+            <div class="clue-description">
+              Let's hypotheically say you're a chump and suck at headshots.  You land four body against the enemy using your vandal.  How much damage have you done? <br>
+              _ _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label3" for="clue3">Clue 3:</label>
             <input type="text" id="clue3">
             <button onclick="checkAnswer('clue3', 'label3', 2)">Check</button>
-            <div class="clue-description">This is a description for Clue 3</div>
+            <div class="clue-description">Often paired with Sapphire or Amethyst, this song has the ability to destroy the entire board, including both players' characters. <br>
+               _ _ &nbsp;&nbsp;&nbsp; _ _ _ _ _ _ _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label4" for="clue4">Clue 4:</label>
             <input type="text" id="clue4">
             <button onclick="checkAnswer('clue4', 'label4', 3)">Check</button>
-            <div class="clue-description">This is a description for Clue 4</div>
+            <div class="clue-description">
+              Alternativey, this Ally is the definition of a chump.  With 1 Inkwell, 1 strength, 3 willpower there's just nothing special about him. But man, can he sing.<br>
+              <i>Oh the sky would be blue,<br> and you guys will be there too<br> When I finally do what frozen things do in summer.</i><br>
+              _ _ _ _ 
+            </div>
         </div>
         <div class="clue">
             <label id="label5" for="clue5">Clue 5:</label>
             <input type="text" id="clue5">
             <button onclick="checkAnswer('clue5', 'label5', 4)">Check</button>
-            <div class="clue-description">This is a description for Clue 5</div>
+            <div class="clue-description">
+              Don't touch my fucking plants! <br>
+              _ _ _ _ _ _ _ _ _ &nbsp;&nbsp;&nbsp; _ _ _ _ _ _ _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label6" for="clue6">Clue 6:</label>
             <input type="text" id="clue6">
             <button onclick="checkAnswer('clue6', 'label6', 5)">Check</button>
-            <div class="clue-description">This is a description for Clue 6</div>
+            <div class="clue-description">
+              Teleporters! <br>
+               _ _ _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label7" for="clue7">Clue 7:</label>
             <input type="text" id="clue7">
             <button onclick="checkAnswer('clue7', 'label7', 6)">Check</button>
-            <div class="clue-description">This is a description for Clue 7</div>
+            <div class="clue-description">
+              In Yacht, the most classic of all games, how many points are needed to get the +35 bonus on the upper section?<br>
+              _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label8" for="clue8">Clue 8:</label>
             <input type="text" id="clue8">
             <button onclick="checkAnswer('clue8', 'label8', 7)">Check</button>
-            <div class="clue-description">This is a description for Clue 8</div>
+            <div class="clue-description">
+              Another classic, but this time a corporation. How many credits does Tharsis Republic start with? <br>
+               _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label9" for="clue9">Clue 9:</label>
             <input type="text" id="clue9">
             <button onclick="checkAnswer('clue9', 'label9', 8)">Check</button>
-            <div class="clue-description">This is a description for Clue 9</div>
+            <div class="clue-description">
+              You've been dragged to many of these races now.  In a 5k how many feet is the course? (round down) <br>
+               _ _ _ _ _
+            </div>
         </div>
         <div class="clue">
             <label id="label10" for="clue10">Clue 10:</label>
             <input type="text" id="clue10">
             <button onclick="checkAnswer('clue10', 'label10', 9)">Check</button>
-            <div class="clue-description">This is a description for Clue 10</div>
+            <div class="clue-description">
+              Friends may come and go, but this got-tier restaurant is forever (we don't talk about Henrietta). <br>
+               _ _ _ _ _ _
+            </div>
         </div>
     </div>
 
@@ -113,7 +141,7 @@
         
         var equationAnswers = [9, 9, 2, 4, 2, 9, 8, 3, 2, 1];
 
-        var correctAnswers = ['fear magneto', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz', 'xyz'];
+        var correctAnswers = ['fear magneto', '160', 'be prepared', 'olaf', 'protected habitats', 'bind', '63', '40', '16404', 'chilis'];
 
         function updateEquationDiv() {
             var equationElement = document.getElementById('equation');
@@ -128,7 +156,7 @@
         
         function checkAnswer(clueId, labelId, clueIndex) {
             var input = document.getElementById(clueId).value;
-            if (input.toLowerCase() === correctAnswers[clueIndex]) {
+            if (input.toLowerCase().replace(/[',]/g, '') === correctAnswers[clueIndex]) {
                 document.getElementById(labelId).classList.remove('incorrect');
                 document.getElementById(labelId).classList.add('completed');
                 updateEquation(clueIndex);
