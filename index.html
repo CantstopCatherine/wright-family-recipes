@@ -3,14 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Website</title>
+    <title>Recipe Viewer</title>
+    <script>
+        function loadRecipe() {
+            fetch('recipes/chocolate_cake.txt')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('recipe-content').innerText = text;
+            })
+            .catch(error => console.error('Error loading recipe:', error));
+        }
+    </script>
 </head>
 <body>
-    <h1>🥚 Wright Family Recipes 🥚</h1>
-    <ul>
-        <li><a href="recipes/chocolate_cake.txt" target="_blank">Chocolate Cake</a></li>
-        <li><a href="recipes/apple_pie.txt" target="_blank">Apple Pie</a></li>
-        <li><a href="recipes/spaghetti_bolognese.txt" target="_blank">Spaghetti Bolognese</a></li>
-    </ul>
+
+    <h1>Chocolate Cake Recipe</h1>
+    <button onclick="loadRecipe()">Show Recipe</button>
+    <pre id="recipe-content"></pre>
+
 </body>
 </html>
