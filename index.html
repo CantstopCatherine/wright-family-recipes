@@ -3,23 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Viewer</title>
+    <title>Wright Family Recipes</title>
+    <meta name="description" content="Recipes collected and developed by the Wright family over the years.">
     <script>
-        function loadRecipe() {
-            fetch('recipes/chocolate_cake.txt')
-            .then(response => response.text())
-            .then(text => {
-                document.getElementById('recipe-content').innerText = text;
-            })
-            .catch(error => console.error('Error loading recipe:', error));
+        function loadWelcomePage() {
+            document.getElementById('content').innerHTML = `
+                <div class="welcome-box">
+                    <h1>Welcome!</h1>
+                    <p>Select a category from the side menu and begin searching for something delicious!</p>
+                    <p>If you'd like to add a recipe to the website, please fill out the <a href="recipes/form.txt" download="form.txt" title="Download the form">form</a> and email it to Catherine.Wright.246@gmail.com</p>
+                </div>
+                <img src="images/FamilyMiami.jpg" alt="Wright Family in Miami" style="max-width: 100%; height: 70vh; margin-top: 20px;">
+            `;
+            document.getElementById('content').style.display = 'block';
+        }
+    
+        function loadCategory(category) {
+            if (category === 'all') {
+                // Define the folders to fetch recipes from
+                const folders = ['main_courses', 'desserts', 'appetizers'];
+                const fetchPromises = folders.map(folder =>
+                    fetch(`recipes/${folder}/`)
+                        .then(response => response.text())
+                        .then(text => {
+                            const parser = new DOMParser();
+                            const htmlDoc = parser.parseFromString(text, 'text/html');
+                            return Array.from(htmlDoc.querySelectorAll('a'))
+                                .map(link => ({
+                                    file: link.href.split('/').pop(),
+                                    folder
+                                }))
+                                .filter(item => item.file.endsWith('.txt'));
+                        })
+                );
+
+                // Wait for all fetches to complete
+                Promise.all(fetchPromises)
+                    .then(results => {
+                        const allFiles = results.flat(); // Combine all results into a single array
+                        const recipeList = allFiles.map(({ file, folder }) => `
+                            <li>
+                                <a href="#" onclick="loadRecipe('${folder}', '${file}')">${file.replace('.txt', '').replace('_', ' ')}</a>
+                            </li>
+                        `).join('');
+
+                        document.getElementById('content').innerHTML = `
+                            <div id="recipeList">
+                                <h1>All Recipes</h1>
+                                <input type="text" id="searchBar" placeholder="Search recipes..." oninput="filterRecipes()">
+                                <ul>${recipeList}</ul>
+                            </div>
+                            <div id="recipeContent">
+                                <p></p>
+                            </div>
+                        `;
+                        document.getElementById('content').style.display = 'flex'; // Ensure two-column layout
+                    })
+                    .catch(error => console.error('Error loading recipes:', error));
+            } else {
+                // Fetch recipes from a single category
+                fetch(`recipes/${category}/`)
+                    .then(response => response.text())
+                    .then(text => {
+                        const parser = new DOMParser();
+                        const htmlDoc = parser.parseFromString(text, 'text/html');
+                        const files = Array.from(htmlDoc.querySelectorAll('a'))
+                            .map(link => link.href.split('/').pop())
+                            .filter(file => file.endsWith('.txt'));
+
+                        const recipeList = files.map(file => `
+                            <li>
+                                <a href="#" onclick="loadRecipe('${category}', '${file}')">${file.replace('.txt', '').replace('_', ' ')}</a>
+                            </li>
+                        `).join('');
+
+                        document.getElementById('content').innerHTML = `
+                            <div id="recipeList">
+                                <h1>${category.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</h1>
+                                <input type="text" id="searchBar" placeholder="Search recipes..." oninput="filterRecipes()">
+                                <ul>${recipeList}</ul>
+                            </div>
+                            <div id="recipeContent">
+                                <p></p>
+                            </div>
+                        `;
+                        document.getElementById('content').style.display = 'flex'; // Ensure two-column layout
+                    })
+                    .catch(error => console.error('Error loading category:', error));
+            }
+        }
+
+        function loadRecipe(category, file) {
+            fetch(`recipes/${category}/${file}`)
+                .then(response => response.text())
+                .then(text => {
+                    // Bold "Ingredients:" and "Instructions:"
+                    const formattedText = text
+                        .replace(/(Ingredients:)/gi, '<strong>$1</strong>')
+                        .replace(/(Instructions:)/gi, '<strong>$1</strong>')
+                        .replace(/(Submitted By:)/gi, '<strong>$1</strong>');
+
+                    document.getElementById('recipeContent').innerHTML = `
+                    <div class="recipe-box">
+                        <h1>${file.replace('.txt', '').replace('_', ' ')}</h1>
+                        <pre style="font-size: 1.2em;">${formattedText}</pre>
+                    </div>
+                    `;
+
+                    // Highlight the selected recipe
+                    const links = document.querySelectorAll('#recipeList a');
+                    links.forEach(link => link.classList.remove('active'));
+                    event.target.classList.add('active');
+                })
+                .catch(error => console.error('Error loading recipe:', error));
+        }
+    
+        function filterRecipes() {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const recipes = document.querySelectorAll('#recipeList li');
+            recipes.forEach(recipe => {
+                const text = recipe.textContent.toLowerCase();
+                recipe.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
         }
     </script>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh; /* Ensure the body takes up the full viewport height */
+            background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), 
+                url('images/background.jpg');
+        }
+        
+        #sidebar {
+            width: 200px;
+            padding: 10px;
+            background-color: #9ad3ab; /* Gray color */
+            border-right: 1px solid #ccc;
+            height: auto; /* Make the sidebar take up the full height of the screen */
+            box-sizing: border-box; /* Include padding and border in the height calculation */
+        }
+        .welcome-box {
+            background-color: #9ad3ab; /* Same color as the sidebar */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px; /* Add some padding inside the box */
+            margin: 5px auto; /* Center the box horizontally */
+            max-width: 700px; /* Limit the width of the box */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+            text-align: center; /* Center-align the text */
+        }
+        .recipe-box {
+            background-color: #9ad3ab; /* Same color as the sidebar */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px; /* Add some padding inside the box */
+            margin: 5px auto; /* Center the box horizontally */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+            
+        }
+        #content {
+            /* flex: 1; */
+            padding: 20px;
+        }
+        #recipeList {
+            margin-right: 20px;
+            max-height: 120vh; /* Set a maximum height for the list */
+            overflow-y: auto; /* Add a vertical scroll bar if content exceeds the height */
+            padding-right: 10px; /* Add some padding for better spacing */
+            box-sizing: border-box; /* Ensure padding is included in the width/height calculation */
+            background-color: #9ad3ab; /* Same color as the sidebar */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px; /* Add some padding inside the box */
+            margin: 5px auto; /* Center the box horizontally */
+        }
+        #recipeContent {
+            flex: 1; /* Right column for the recipe content */
+            /* border-left: 1px solid #ccc; */
+            padding-left: 60px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #423e41;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body>
+<body onload="loadWelcomePage()">
 
-    <h1>Chocolate Cake Recipe</h1>
-    <button onclick="loadRecipe()">Show Recipe</button>
-    <pre id="recipe-content"></pre>
+    <div id="sidebar">
+        <h2>Wright Family Recipes</h2>
+        <ul>
+            <li><a href="#" onclick="loadWelcomePage()">Welcome</a></li>
+            <li><a href="#" onclick="loadCategory('all')">All</a></li>
+            <li><a href="#" onclick="loadCategory('main_courses')">Main Courses</a></li>
+            <li><a href="#" onclick="loadCategory('desserts')">Desserts</a></li>
+            <li><a href="#" onclick="loadCategory('appetizers')">Appetizers</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <!-- Content will be dynamically loaded here -->
+    </div>
 
 </body>
 </html>
