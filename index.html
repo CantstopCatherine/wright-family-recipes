@@ -19,85 +19,55 @@
         }
     
         function loadCategory(category) {
-            if (category === 'all') {
-                // Define the folders to fetch recipes from
-                const folders = ['main_courses', 'desserts', 'appetizers'];
-                const fetchPromises = folders.map(folder =>
-                    fetch(`recipes/${folder}/`)
-                        .then(response => response.text())
-                        .then(text => {
-                            const parser = new DOMParser();
-                            const htmlDoc = parser.parseFromString(text, 'text/html');
-                            return Array.from(htmlDoc.querySelectorAll('a'))
-                                .map(link => ({
-                                    file: link.href.split('/').pop(),
-                                    folder
-                                }))
-                                .filter(item => item.file.endsWith('.txt'));
-                        })
-                );
+            fetch("recipes.json")  // Load the predefined list from JSON
+                .then(response => response.json())
+                .then(data => {
+                    let recipeList = "";
 
-                // Wait for all fetches to complete
-                Promise.all(fetchPromises)
-                    .then(results => {
-                        const allFiles = results.flat(); // Combine all results into a single array
-                        const recipeList = allFiles.map(({ file, folder }) => `
-                            <li>
-                                <a href="#" onclick="loadRecipe('${folder}', '${file}')">${file.replace('.txt', '').replace('_', ' ')}</a>
-                            </li>
-                        `).join('');
+                    if (category === "all") {
+                        // Combine all categories into a single list
+                        Object.entries(data).forEach(([folder, files]) => {
+                            recipeList += files.map(file => `
+                                <li>
+                                    <a href="#" onclick="loadRecipe('${folder}', '${file}')">
+                                    ${file.replace('.txt', '').replace('_', ' ')}</a>
+                                </li>
+                            `).join('');
+                        });
+                    } else {
+                        // Load recipes from a specific category
+                        if (data[category]) {
+                            recipeList = data[category].map(file => `
+                                <li>
+                                    <a href="#" onclick="loadRecipe('${category}', '${file}')">
+                                    ${file.replace('.txt', '').replace('_', ' ')}</a>
+                                </li>
+                            `).join('');
+                        } else {
+                            recipeList = "<p>No recipes found for this category.</p>";
+                        }
+                    }
 
-                        document.getElementById('content').innerHTML = `
-                            <div id="recipeList">
-                                <h1>All Recipes</h1>
-                                <input type="text" id="searchBar" placeholder="Search recipes..." oninput="filterRecipes()">
-                                <ul>${recipeList}</ul>
-                            </div>
-                            <div id="recipeContent">
-                                <p></p>
-                            </div>
-                        `;
-                        document.getElementById('content').style.display = 'flex'; // Ensure two-column layout
-                    })
-                    .catch(error => console.error('Error loading recipes:', error));
-            } else {
-                // Fetch recipes from a single category
-                fetch(`recipes/${category}/`)
-                    .then(response => response.text())
-                    .then(text => {
-                        const parser = new DOMParser();
-                        const htmlDoc = parser.parseFromString(text, 'text/html');
-                        const files = Array.from(htmlDoc.querySelectorAll('a'))
-                            .map(link => link.href.split('/').pop())
-                            .filter(file => file.endsWith('.txt'));
-
-                        const recipeList = files.map(file => `
-                            <li>
-                                <a href="#" onclick="loadRecipe('${category}', '${file}')">${file.replace('.txt', '').replace('_', ' ')}</a>
-                            </li>
-                        `).join('');
-
-                        document.getElementById('content').innerHTML = `
-                            <div id="recipeList">
-                                <h1>${category.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</h1>
-                                <input type="text" id="searchBar" placeholder="Search recipes..." oninput="filterRecipes()">
-                                <ul>${recipeList}</ul>
-                            </div>
-                            <div id="recipeContent">
-                                <p></p>
-                            </div>
-                        `;
-                        document.getElementById('content').style.display = 'flex'; // Ensure two-column layout
-                    })
-                    .catch(error => console.error('Error loading category:', error));
-            }
+                    document.getElementById('content').innerHTML = `
+                        <div id="recipeList">
+                            <h1>${category === "all" ? "All Recipes" : category.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</h1>
+                            <input type="text" id="searchBar" placeholder="Search recipes..." oninput="filterRecipes()">
+                            <ul>${recipeList}</ul>
+                        </div>
+                        <div id="recipeContent">
+                            <p></p>
+                        </div>
+                    `;
+                    document.getElementById('content').style.display = 'flex'; // Ensure two-column layout
+                })
+                .catch(error => console.error("Error loading recipes:", error));
         }
 
         function loadRecipe(category, file) {
             fetch(`recipes/${category}/${file}`)
                 .then(response => response.text())
                 .then(text => {
-                    // Bold "Ingredients:" and "Instructions:"
+                    // Bold "Ingredients:", "Instructions:", and "Submitted By:"
                     const formattedText = text
                         .replace(/(Ingredients:)/gi, '<strong>$1</strong>')
                         .replace(/(Instructions:)/gi, '<strong>$1</strong>')
@@ -115,8 +85,10 @@
                     links.forEach(link => link.classList.remove('active'));
                     event.target.classList.add('active');
                 })
-                .catch(error => console.error('Error loading recipe:', error));
+                .catch(error => console.error("Error loading recipe:", error));
         }
+
+
     
         function filterRecipes() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
